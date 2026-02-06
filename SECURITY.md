@@ -10,7 +10,9 @@ Security is our top priority. We take all security vulnerabilities seriously.
 
 Instead, please report them via email to:
 
-**agentguard@proton.me**
+**Please use GitHub Security Advisories to report vulnerabilities:**
+
+https://github.com/agentguard-ai/tealtiger-sdk/security/advisories/new
 
 ### What to Include
 
@@ -84,13 +86,13 @@ We provide security updates for the following versions:
 
 ```typescript
 // ✅ Good - Use environment variables
-const guard = new AgentGuard({
-  apiKey: process.env.AGENTGUARD_API_KEY
+const client = new TealOpenAI({
+  apiKey: process.env.OPENAI_API_KEY
 });
 
 // ❌ Bad - Hardcoded API key
-const guard = new AgentGuard({
-  apiKey: 'ag_1234567890abcdef'
+const client = new TealOpenAI({
+  apiKey: 'sk-1234567890abcdef'
 });
 ```
 
@@ -104,15 +106,13 @@ const guard = new AgentGuard({
 - Use certificate pinning for high-security environments
 
 ```typescript
-// ✅ Good - HTTPS URL
-const guard = new AgentGuard({
-  ssaUrl: 'https://ssa.agentguard.io'
+// ✅ Good - HTTPS (OpenAI/Anthropic APIs use HTTPS by default)
+const client = new TealOpenAI({
+  apiKey: process.env.OPENAI_API_KEY
 });
 
-// ❌ Bad - HTTP URL
-const guard = new AgentGuard({
-  ssaUrl: 'http://ssa.agentguard.io'
-});
+// Note: TealTiger uses OpenAI/Anthropic APIs directly
+// All connections are HTTPS by default
 ```
 
 ### Input Validation
@@ -126,13 +126,14 @@ const guard = new AgentGuard({
 
 ```typescript
 // ✅ Good - Validated input
-const result = await guard.executeTool(
-  'database-query',
-  { 
-    query: sanitizeQuery(userInput),
-    limit: Math.min(userLimit, 1000)
-  }
-);
+const result = await client.chat.completions.create({
+  model: 'gpt-4',
+  messages: [{ 
+    role: 'user', 
+    content: sanitizeInput(userInput) 
+  }],
+  max_tokens: Math.min(userMaxTokens, 4000)
+});
 ```
 
 ### Dependency Security
@@ -212,15 +213,12 @@ We welcome security researchers to audit our code:
 
 ### Documentation
 
-- [Security Best Practices](https://docs.agentguard.io/security)
-- [API Security Guide](https://docs.agentguard.io/api-security)
-- [Threat Model](https://docs.agentguard.io/threat-model)
+- [Security Best Practices](https://github.com/agentguard-ai/tealtiger#readme)
+- [API Documentation](https://github.com/agentguard-ai/tealtiger-sdk#readme)
 
-### Tools
+### Examples
 
-- [Security Scanner](https://github.com/agentguard/security-scanner)
-- [Policy Templates](https://github.com/agentguard/policy-templates)
-- [Security Examples](https://github.com/agentguard/agentguard-sdk/tree/main/examples/security)
+- [Security Examples](https://github.com/agentguard-ai/tealtiger/tree/main/examples)
 
 ## 🏆 Security Hall of Fame
 
@@ -230,9 +228,8 @@ We recognize security researchers who help us improve:
 
 ## 📞 Contact
 
-- **Security Issues**: agentguard@proton.me
-- **General Questions**: agentguard@proton.me
-- **GitHub**: [agentguard-ai/agentguard-sdk](https://github.com/agentguard-ai/agentguard-sdk)
+- **Security Issues**: Use [GitHub Security Advisories](https://github.com/agentguard-ai/tealtiger-sdk/security/advisories/new)
+- **GitHub**: [agentguard-ai/tealtiger-sdk](https://github.com/agentguard-ai/tealtiger-sdk)
 
 ## 📄 Disclosure Policy
 
@@ -263,4 +260,4 @@ We credit security researchers in:
 
 ---
 
-**Thank you for helping keep AgentGuard SDK secure!** 🔒
+**Thank you for helping keep TealTiger SDK secure!** 🔒
