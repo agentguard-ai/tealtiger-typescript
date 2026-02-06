@@ -1,8 +1,8 @@
 /**
- * AgentGuard Unit Tests
+ * TealTiger Unit Tests
  */
 
-import { AgentGuard } from '../AgentGuard';
+import { TealTiger } from '../TealTiger';
 import { SSAClient } from '../SSAClient';
 import { Configuration } from '../../config/Configuration';
 import { SecurityDecision } from '../../types';
@@ -15,8 +15,8 @@ const MockedSSAClient = SSAClient as jest.MockedClass<typeof SSAClient>;
 jest.mock('../../config/Configuration');
 const MockedConfiguration = Configuration as jest.MockedClass<typeof Configuration>;
 
-describe('AgentGuard', () => {
-  let agentGuard: AgentGuard;
+describe('TealTiger', () => {
+  let TealTiger: TealTiger;
   let mockSSAClient: jest.Mocked<SSAClient>;
   let mockConfig: jest.Mocked<Configuration>;
 
@@ -55,8 +55,8 @@ describe('AgentGuard', () => {
 
     MockedSSAClient.mockImplementation(() => mockSSAClient);
 
-    // Create AgentGuard instance
-    agentGuard = new AgentGuard({
+    // Create TealTiger instance
+    TealTiger = new TealTiger({
       apiKey: 'test-api-key',
       ssaUrl: 'https://test-ssa.example.com',
       agentId: 'test-agent'
@@ -65,7 +65,7 @@ describe('AgentGuard', () => {
 
   describe('Constructor', () => {
     it('should create instance with valid configuration', () => {
-      expect(agentGuard).toBeInstanceOf(AgentGuard);
+      expect(TealTiger).toBeInstanceOf(TealTiger);
       expect(MockedConfiguration).toHaveBeenCalledWith({
         apiKey: 'test-api-key',
         ssaUrl: 'https://test-ssa.example.com',
@@ -114,7 +114,7 @@ describe('AgentGuard', () => {
 
       mockToolExecutor.mockResolvedValue({ result: 'success' });
 
-      const result = await agentGuard.executeTool(
+      const result = await TealTiger.executeTool(
         'test-tool',
         { param1: 'value1' },
         undefined, // context
@@ -153,7 +153,7 @@ describe('AgentGuard', () => {
         decision: mockDecision
       });
 
-      const result = await agentGuard.executeTool(
+      const result = await TealTiger.executeTool(
         'dangerous-tool',
         { param1: 'value1' },
         undefined, // context
@@ -196,7 +196,7 @@ describe('AgentGuard', () => {
 
       mockToolExecutor.mockResolvedValue({ content: 'file content' });
 
-      const result = await agentGuard.executeTool(
+      const result = await TealTiger.executeTool(
         'file-write',
         { path: '/test.txt', content: 'data' },
         undefined, // context
@@ -213,20 +213,20 @@ describe('AgentGuard', () => {
     });
 
     it('should validate tool name', async () => {
-      const result = await agentGuard.executeTool('', {}, undefined, mockToolExecutor);
+      const result = await TealTiger.executeTool('', {}, undefined, mockToolExecutor);
       
       expect(result.success).toBe(false);
       expect(result.error?.code).toBe('INVALID_REQUEST');
       expect(result.error?.message).toContain('Tool name is required');
 
-      const result2 = await agentGuard.executeTool('invalid tool name!', {}, undefined, mockToolExecutor);
+      const result2 = await TealTiger.executeTool('invalid tool name!', {}, undefined, mockToolExecutor);
       
       expect(result2.success).toBe(false);
       expect(result2.error?.code).toBe('INVALID_REQUEST');
     });
 
     it('should validate tool parameters', async () => {
-      const result = await agentGuard.executeTool('test-tool', null as any, undefined, mockToolExecutor);
+      const result = await TealTiger.executeTool('test-tool', null as any, undefined, mockToolExecutor);
       
       expect(result.success).toBe(false);
       expect(result.error?.code).toBe('INVALID_REQUEST');
@@ -243,7 +243,7 @@ describe('AgentGuard', () => {
         }
       });
 
-      const result = await agentGuard.executeTool(
+      const result = await TealTiger.executeTool(
         'test-tool',
         { param1: 'value1' },
         undefined, // context
@@ -279,7 +279,7 @@ describe('AgentGuard', () => {
         decision: mockDecision
       });
 
-      const result = await agentGuard.evaluateTool(
+      const result = await TealTiger.evaluateTool(
         'test-tool',
         { param1: 'value1' }
       );
@@ -305,7 +305,7 @@ describe('AgentGuard', () => {
       });
 
       await expect(
-        agentGuard.evaluateTool('test-tool', { param1: 'value1' })
+        TealTiger.evaluateTool('test-tool', { param1: 'value1' })
       ).rejects.toThrow('Security evaluation failed');
     });
   });
@@ -343,7 +343,7 @@ describe('AgentGuard', () => {
 
       mockSSAClient.getAuditTrail.mockResolvedValue(mockAuditTrail);
 
-      const result = await agentGuard.getAuditTrail();
+      const result = await TealTiger.getAuditTrail();
 
       expect(mockSSAClient.getAuditTrail).toHaveBeenCalledWith('test-agent', {});
       expect(result).toEqual(mockAuditTrail);
@@ -365,7 +365,7 @@ describe('AgentGuard', () => {
         }
       });
 
-      await agentGuard.getAuditTrail(filters);
+      await TealTiger.getAuditTrail(filters);
 
       expect(mockSSAClient.getAuditTrail).toHaveBeenCalledWith('test-agent', filters);
     });
@@ -390,7 +390,7 @@ describe('AgentGuard', () => {
 
       mockSSAClient.validatePolicies.mockResolvedValue(mockValidationResult);
 
-      const result = await agentGuard.validatePolicies(mockPolicies);
+      const result = await TealTiger.validatePolicies(mockPolicies);
 
       expect(mockSSAClient.validatePolicies).toHaveBeenCalledWith(mockPolicies);
       expect(result).toEqual(mockValidationResult);
@@ -424,7 +424,7 @@ describe('AgentGuard', () => {
 
       const mockToolExecutor = jest.fn().mockRejectedValue(new Error('Tool execution failed'));
 
-      const result = await agentGuard.executeTool(
+      const result = await TealTiger.executeTool(
         'test-tool',
         { param1: 'value1' },
         undefined, // context
@@ -453,7 +453,7 @@ describe('AgentGuard', () => {
 
       const mockToolExecutor = jest.fn();
 
-      const result = await agentGuard.executeTool('test-tool', {}, undefined, mockToolExecutor);
+      const result = await TealTiger.executeTool('test-tool', {}, undefined, mockToolExecutor);
       
       expect(result.success).toBe(false);
       expect(result.error?.code).toBe('POLICY_ERROR');
@@ -493,10 +493,10 @@ describe('AgentGuard', () => {
         decision: mockDecision
       });
 
-      await agentGuard.executeTool('test-tool', {}, undefined, jest.fn());
+      await TealTiger.executeTool('test-tool', {}, undefined, jest.fn());
 
       expect(console.log).toHaveBeenCalledWith(
-        '[AgentGuard SDK] Tool denied:',
+        '[TealTiger SDK] Tool denied:',
         'Tool is risky'
       );
     });

@@ -4,8 +4,8 @@
 
 import axios from 'axios';
 import { SSAClient } from '../SSAClient';
-import { AgentGuardConfig } from '../../types';
-import { AgentGuardNetworkError } from '../../utils/errors';
+import { TealTigerConfig } from '../../types';
+import { TealTigerNetworkError } from '../../utils/errors';
 import { ToolExecutionRequest, SecurityDecision } from '../../types';
 
 // Mock axios
@@ -38,8 +38,8 @@ describe('SSAClient', () => {
 
     mockedAxios.create.mockReturnValue(mockAxiosInstance);
 
-    // Create a mock config object that matches AgentGuardConfig
-    const mockConfigObject: AgentGuardConfig = {
+    // Create a mock config object that matches TealTigerConfig
+    const mockConfigObject: TealTigerConfig = {
       ssaUrl: 'https://test-ssa.example.com',
       apiKey: 'test-api-key',
       timeout: 5000,
@@ -58,7 +58,7 @@ describe('SSAClient', () => {
         headers: {
           'Content-Type': 'application/json',
           'X-API-Key': 'test-api-key',
-          'User-Agent': 'AgentGuard-SDK/0.1.0'
+          'User-Agent': 'TealTiger-SDK/0.1.0'
         }
       });
     });
@@ -129,7 +129,7 @@ describe('SSAClient', () => {
       mockAxiosInstance.post.mockRejectedValue(axiosError);
 
       await expect(ssaClient.evaluateSecurity(mockRequest))
-        .rejects.toThrow(AgentGuardNetworkError);
+        .rejects.toThrow(TealTigerNetworkError);
     });
 
     it('should retry on failure', async () => {
@@ -272,7 +272,7 @@ describe('SSAClient', () => {
         agentId: 'test-agent',
         toolName: 'test-tool',
         parameters: {}
-      })).rejects.toThrow(AgentGuardNetworkError);
+      })).rejects.toThrow(TealTigerNetworkError);
     });
 
     it('should handle authentication errors', async () => {
@@ -302,7 +302,7 @@ describe('SSAClient', () => {
         agentId: 'test-agent',
         toolName: 'test-tool',
         parameters: {}
-      })).rejects.toThrow(AgentGuardNetworkError);
+      })).rejects.toThrow(TealTigerNetworkError);
     });
   });
 
@@ -344,7 +344,7 @@ describe('SSAClient', () => {
 
     it('should log debug information when debug is enabled', async () => {
       // Create SSAClient with debug enabled
-      const debugConfig: AgentGuardConfig = {
+      const debugConfig: TealTigerConfig = {
         ssaUrl: 'https://test-ssa.example.com',
         apiKey: 'test-api-key',
         timeout: 5000,

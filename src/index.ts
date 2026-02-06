@@ -5,7 +5,7 @@
  */
 
 // Main SDK class
-export { AgentGuard } from './client/AgentGuard';
+export { TealTiger } from './client/TealTiger';
 
 // Policy utilities
 export { 
@@ -49,7 +49,7 @@ export type {
 
 // Types and interfaces
 export type {
-  AgentGuardConfig,
+  TealTigerConfig,
   ToolParameters,
   SecurityContext,
   SecurityDecision,
@@ -64,25 +64,25 @@ export type {
   AuditEntry,
   AuditTrailResponse,
   SDKStatistics,
-  AgentGuardError
+  TealTigerError
 } from './types';
 
 // Error classes
 export {
-  BaseAgentGuardError,
-  AgentGuardConfigError,
-  AgentGuardNetworkError,
-  AgentGuardServerError,
-  AgentGuardSecurityError,
-  AgentGuardValidationError,
-  AgentGuardAuthError,
-  createAgentGuardError,
-  isAgentGuardError,
+  BaseTealTigerError,
+  TealTigerConfigError,
+  TealTigerNetworkError,
+  TealTigerServerError,
+  TealTigerSecurityError,
+  TealTigerValidationError,
+  TealTigerAuthError,
+  createTealTigerError,
+  isTealTigerError,
   getErrorDetails
 } from './utils/errors';
 
 // Error codes enum
-export { AgentGuardErrorCode } from './types';
+export { TealTigerErrorCode } from './types';
 
 // Utility functions
 export {

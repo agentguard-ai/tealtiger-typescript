@@ -6,25 +6,25 @@
 
 import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
 import {
-  AgentGuardConfig,
+  TealTigerConfig,
   SecurityEvaluationResponse,
   ToolExecutionRequest,
   AuditTrailResponse,
   PolicyValidationResult,
   SecurityPolicy,
-  AgentGuardError,
-  AgentGuardErrorCode
+  TealTigerError,
+  TealTigerErrorCode
 } from '../types';
-import { AgentGuardConfigError, AgentGuardNetworkError, AgentGuardServerError } from '../utils/errors';
+import { TealTigerConfigError, TealTigerNetworkError, TealTigerServerError } from '../utils/errors';
 
 /**
  * HTTP client for communicating with the Security Sidecar Agent
  */
 export class SSAClient {
   private readonly httpClient: AxiosInstance;
-  private readonly config: AgentGuardConfig;
+  private readonly config: TealTigerConfig;
 
-  constructor(config: AgentGuardConfig) {
+  constructor(config: TealTigerConfig) {
     this.config = config;
     
     // Create axios instance with default configuration
@@ -34,7 +34,7 @@ export class SSAClient {
       headers: {
         'Content-Type': 'application/json',
         'X-API-Key': config.apiKey,
-        'User-Agent': 'AgentGuard-SDK/0.1.0',
+        'User-Agent': 'TealTiger-SDK/0.1.0',
         ...config.headers
       }
     });
@@ -43,15 +43,15 @@ export class SSAClient {
     if (config.debug) {
       this.httpClient.interceptors.request.use(
         (request) => {
-          console.log(`[AgentGuard SDK] Request: ${request.method?.toUpperCase()} ${request.url}`);
-          console.log(`[AgentGuard SDK] Headers:`, request.headers);
+          console.log(`[TealTiger SDK] Request: ${request.method?.toUpperCase()} ${request.url}`);
+          console.log(`[TealTiger SDK] Headers:`, request.headers);
           if (request.data) {
-            console.log(`[AgentGuard SDK] Body:`, request.data);
+            console.log(`[TealTiger SDK] Body:`, request.data);
           }
           return request;
         },
         (error) => {
-          console.error('[AgentGuard SDK] Request Error:', error);
+          console.error('[TealTiger SDK] Request Error:', error);
           return Promise.reject(error);
         }
       );
@@ -61,14 +61,14 @@ export class SSAClient {
     this.httpClient.interceptors.response.use(
       (response) => {
         if (this.config.debug) {
-          console.log(`[AgentGuard SDK] Response: ${response.status} ${response.statusText}`);
-          console.log(`[AgentGuard SDK] Data:`, response.data);
+          console.log(`[TealTiger SDK] Response: ${response.status} ${response.statusText}`);
+          console.log(`[TealTiger SDK] Data:`, response.data);
         }
         return response;
       },
       (error: AxiosError) => {
         if (this.config.debug) {
-          console.error('[AgentGuard SDK] Response Error:', error.message);
+          console.error('[TealTiger SDK] Response Error:', error.message);
         }
         return Promise.reject(this.handleHttpError(error));
       }
@@ -151,21 +151,21 @@ export class SSAClient {
   }
 
   /**
-   * Handle HTTP errors and convert them to AgentGuard errors
+   * Handle HTTP errors and convert them to TealTiger errors
    */
-  private handleHttpError(error: AxiosError): AgentGuardError {
+  private handleHttpError(error: AxiosError): TealTigerError {
     if (error.code === 'ECONNREFUSED' || error.code === 'ENOTFOUND') {
-      return new AgentGuardNetworkError(
+      return new TealTigerNetworkError(
         'Unable to connect to Security Sidecar Agent',
-        AgentGuardErrorCode.CONNECTION_ERROR,
+        TealTigerErrorCode.CONNECTION_ERROR,
         { ssaUrl: this.config.ssaUrl, originalError: error.message }
       );
     }
 
     if (error.code === 'ECONNABORTED') {
-      return new AgentGuardNetworkError(
+      return new TealTigerNetworkError(
         'Request timeout',
-        AgentGuardErrorCode.TIMEOUT_ERROR,
+        TealTigerErrorCode.TIMEOUT_ERROR,
         { timeout: this.config.timeout, originalError: error.message }
       );
     }
@@ -175,39 +175,39 @@ export class SSAClient {
       const data = error.response.data as any;
 
       if (status === 401) {
-        return new AgentGuardConfigError(
+        return new TealTigerConfigError(
           'Authentication failed - invalid API key',
-          AgentGuardErrorCode.AUTHENTICATION_ERROR,
+          TealTigerErrorCode.AUTHENTICATION_ERROR,
           { apiKey: this.config.apiKey.substring(0, 10) + '...', response: data }
         );
       }
 
       if (status === 400) {
-        return new AgentGuardConfigError(
+        return new TealTigerConfigError(
           'Invalid request format',
-          AgentGuardErrorCode.VALIDATION_ERROR,
+          TealTigerErrorCode.VALIDATION_ERROR,
           { response: data }
         );
       }
 
       if (status >= 500) {
-        return new AgentGuardServerError(
+        return new TealTigerServerError(
           'Security Sidecar Agent server error',
-          AgentGuardErrorCode.SERVER_ERROR,
+          TealTigerErrorCode.SERVER_ERROR,
           { status, response: data }
         );
       }
 
-      return new AgentGuardNetworkError(
+      return new TealTigerNetworkError(
         `HTTP ${status}: ${error.response.statusText}`,
-        AgentGuardErrorCode.NETWORK_ERROR,
+        TealTigerErrorCode.NETWORK_ERROR,
         { status, response: data }
       );
     }
 
-    return new AgentGuardNetworkError(
+    return new TealTigerNetworkError(
       'Network error occurred',
-      AgentGuardErrorCode.NETWORK_ERROR,
+      TealTigerErrorCode.NETWORK_ERROR,
       { originalError: error.message }
     );
   }
@@ -215,18 +215,18 @@ export class SSAClient {
   /**
    * Generic error handler
    */
-  private handleError(error: unknown, context: string): AgentGuardError {
+  private handleError(error: unknown, context: string): TealTigerError {
     if (error instanceof Error && 'code' in error) {
-      return error as AgentGuardError;
+      return error as TealTigerError;
     }
 
     if (error instanceof AxiosError) {
       return this.handleHttpError(error);
     }
 
-    return new AgentGuardNetworkError(
+    return new TealTigerNetworkError(
       `${context}: ${error instanceof Error ? error.message : 'Unknown error'}`,
-      AgentGuardErrorCode.NETWORK_ERROR,
+      TealTigerErrorCode.NETWORK_ERROR,
       { context, originalError: error }
     );
   }
@@ -234,7 +234,7 @@ export class SSAClient {
   /**
    * Get client configuration (for debugging)
    */
-  getConfig(): Partial<AgentGuardConfig> {
+  getConfig(): Partial<TealTigerConfig> {
     return {
       ssaUrl: this.config.ssaUrl,
       agentId: this.config.agentId,

@@ -3,7 +3,7 @@
  */
 
 import { createPolicy, PolicyTemplates } from '../PolicyBuilder';
-import { AgentGuardValidationError } from '../../utils/errors';
+import { TealTigerValidationError } from '../../utils/errors';
 
 describe('PolicyBuilder', () => {
   describe('Basic Policy Building', () => {
@@ -64,7 +64,7 @@ describe('PolicyBuilder', () => {
           .whenToolName('test')
           .allow()
           .build();
-      }).toThrow(AgentGuardValidationError);
+      }).toThrow(TealTigerValidationError);
     });
 
     it('should require at least one condition', () => {
@@ -73,7 +73,7 @@ describe('PolicyBuilder', () => {
           .name('test')
           .allow()
           .build();
-      }).toThrow(AgentGuardValidationError);
+      }).toThrow(TealTigerValidationError);
     });
 
     it('should require transformation for transform action', () => {
@@ -86,27 +86,27 @@ describe('PolicyBuilder', () => {
       
       expect(() => {
         builder.build();
-      }).toThrow(AgentGuardValidationError);
+      }).toThrow(TealTigerValidationError);
     });
 
     it('should validate policy name format', () => {
       expect(() => {
         createPolicy().name('');
-      }).toThrow(AgentGuardValidationError);
+      }).toThrow(TealTigerValidationError);
 
       expect(() => {
         createPolicy().name('   ');
-      }).toThrow(AgentGuardValidationError);
+      }).toThrow(TealTigerValidationError);
     });
 
     it('should validate priority format', () => {
       expect(() => {
         createPolicy().priority(-1);
-      }).toThrow(AgentGuardValidationError);
+      }).toThrow(TealTigerValidationError);
 
       expect(() => {
         createPolicy().priority(NaN);
-      }).toThrow(AgentGuardValidationError);
+      }).toThrow(TealTigerValidationError);
     });
   });
 

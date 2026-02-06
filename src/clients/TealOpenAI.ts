@@ -80,7 +80,7 @@ export interface ChatCompletionResponse {
     completion_tokens: number;
     total_tokens: number;
   };
-  /** AgentGuard security metadata */
+  /** TealTiger security metadata */
   security?: {
     guardrailResult?: GuardrailEngineResult;
     costRecord?: CostRecord;

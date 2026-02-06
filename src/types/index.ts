@@ -9,9 +9,9 @@
 // ============================================================================
 
 /**
- * Configuration options for the AgentGuard SDK
+ * Configuration options for the TealTiger SDK
  */
-export interface AgentGuardConfig {
+export interface TealTigerConfig {
   /** API key for authentication with the Security Sidecar Agent */
   apiKey: string;
   
@@ -294,7 +294,7 @@ export interface AuditTrailResponse {
 /**
  * SDK error codes
  */
-export enum AgentGuardErrorCode {
+export enum TealTigerErrorCode {
   // Configuration errors
   INVALID_CONFIG = 'INVALID_CONFIG',
   MISSING_API_KEY = 'MISSING_API_KEY',
@@ -325,8 +325,8 @@ export enum AgentGuardErrorCode {
 /**
  * SDK error class
  */
-export interface AgentGuardError extends Error {
-  code: AgentGuardErrorCode;
+export interface TealTigerError extends Error {
+  code: TealTigerErrorCode;
   details?: Record<string, unknown> | undefined;
   cause?: Error | undefined;
 }

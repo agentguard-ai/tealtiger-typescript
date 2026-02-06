@@ -10,13 +10,13 @@ import {
   sanitizeParameters,
   sanitizeConfig
 } from '../validation';
-import { AgentGuardValidationError, AgentGuardConfigError } from '../errors';
-import { AgentGuardConfig } from '../../types';
+import { TealTigerValidationError, TealTigerConfigError } from '../errors';
+import { TealTigerConfig } from '../../types';
 
 describe('Validation Utilities', () => {
   describe('validateConfig', () => {
     it('should validate correct configuration', () => {
-      const validConfig: AgentGuardConfig = {
+      const validConfig: TealTigerConfig = {
         apiKey: 'test-api-key',
         ssaUrl: 'https://test-ssa.example.com',
         agentId: 'test-agent',
@@ -31,68 +31,68 @@ describe('Validation Utilities', () => {
     it('should reject missing API key', () => {
       const invalidConfig = {
         ssaUrl: 'https://test-ssa.example.com'
-      } as AgentGuardConfig;
+      } as TealTigerConfig;
 
-      expect(() => validateConfig(invalidConfig)).toThrow(AgentGuardConfigError);
+      expect(() => validateConfig(invalidConfig)).toThrow(TealTigerConfigError);
     });
 
     it('should reject empty API key', () => {
-      const invalidConfig: AgentGuardConfig = {
+      const invalidConfig: TealTigerConfig = {
         apiKey: '',
         ssaUrl: 'https://test-ssa.example.com'
       };
 
-      expect(() => validateConfig(invalidConfig)).toThrow(AgentGuardConfigError);
+      expect(() => validateConfig(invalidConfig)).toThrow(TealTigerConfigError);
     });
 
     it('should reject missing SSA URL', () => {
       const invalidConfig = {
         apiKey: 'test-api-key'
-      } as AgentGuardConfig;
+      } as TealTigerConfig;
 
-      expect(() => validateConfig(invalidConfig)).toThrow(AgentGuardConfigError);
+      expect(() => validateConfig(invalidConfig)).toThrow(TealTigerConfigError);
     });
 
     it('should reject invalid SSA URL', () => {
-      const invalidConfig: AgentGuardConfig = {
+      const invalidConfig: TealTigerConfig = {
         apiKey: 'test-api-key',
         ssaUrl: 'not-a-valid-url'
       };
 
-      expect(() => validateConfig(invalidConfig)).toThrow(AgentGuardConfigError);
+      expect(() => validateConfig(invalidConfig)).toThrow(TealTigerConfigError);
     });
 
     it('should reject non-HTTPS URLs', () => {
-      const invalidConfig: AgentGuardConfig = {
+      const invalidConfig: TealTigerConfig = {
         apiKey: 'test-api-key',
         ssaUrl: 'http://insecure-ssa.example.com'
       };
 
-      expect(() => validateConfig(invalidConfig)).toThrow(AgentGuardConfigError);
+      expect(() => validateConfig(invalidConfig)).toThrow(TealTigerConfigError);
     });
 
     it('should reject invalid timeout values', () => {
-      const invalidConfig: AgentGuardConfig = {
+      const invalidConfig: TealTigerConfig = {
         apiKey: 'test-api-key',
         ssaUrl: 'https://test-ssa.example.com',
         timeout: -1
       };
 
-      expect(() => validateConfig(invalidConfig)).toThrow(AgentGuardConfigError);
+      expect(() => validateConfig(invalidConfig)).toThrow(TealTigerConfigError);
     });
 
     it('should reject invalid retry values', () => {
-      const invalidConfig: AgentGuardConfig = {
+      const invalidConfig: TealTigerConfig = {
         apiKey: 'test-api-key',
         ssaUrl: 'https://test-ssa.example.com',
         retries: -1
       };
 
-      expect(() => validateConfig(invalidConfig)).toThrow(AgentGuardConfigError);
+      expect(() => validateConfig(invalidConfig)).toThrow(TealTigerConfigError);
     });
 
     it('should accept valid optional parameters', () => {
-      const validConfig: AgentGuardConfig = {
+      const validConfig: TealTigerConfig = {
         apiKey: 'test-api-key',
         ssaUrl: 'https://test-ssa.example.com',
         agentId: 'custom-agent',
@@ -125,8 +125,8 @@ describe('Validation Utilities', () => {
     });
 
     it('should reject empty tool names', () => {
-      expect(() => validateToolName('')).toThrow(AgentGuardValidationError);
-      expect(() => validateToolName('   ')).toThrow(AgentGuardValidationError);
+      expect(() => validateToolName('')).toThrow(TealTigerValidationError);
+      expect(() => validateToolName('   ')).toThrow(TealTigerValidationError);
     });
 
     it('should reject tool names with invalid characters', () => {
@@ -156,22 +156,22 @@ describe('Validation Utilities', () => {
       ];
 
       invalidNames.forEach(name => {
-        expect(() => validateToolName(name)).toThrow(AgentGuardValidationError);
+        expect(() => validateToolName(name)).toThrow(TealTigerValidationError);
       });
     });
 
     it('should reject tool names that are too long', () => {
       const longName = 'a'.repeat(101); // Assuming max length is 100
-      expect(() => validateToolName(longName)).toThrow(AgentGuardValidationError);
+      expect(() => validateToolName(longName)).toThrow(TealTigerValidationError);
     });
 
     it('should reject tool names that start with numbers', () => {
-      expect(() => validateToolName('123-tool')).toThrow(AgentGuardValidationError);
+      expect(() => validateToolName('123-tool')).toThrow(TealTigerValidationError);
     });
 
     it('should reject tool names with consecutive hyphens or underscores', () => {
-      expect(() => validateToolName('tool--name')).toThrow(AgentGuardValidationError);
-      expect(() => validateToolName('tool__name')).toThrow(AgentGuardValidationError);
+      expect(() => validateToolName('tool--name')).toThrow(TealTigerValidationError);
+      expect(() => validateToolName('tool__name')).toThrow(TealTigerValidationError);
     });
   });
 
@@ -192,11 +192,11 @@ describe('Validation Utilities', () => {
     });
 
     it('should reject null parameters', () => {
-      expect(() => validateToolParameters(null as any)).toThrow(AgentGuardValidationError);
+      expect(() => validateToolParameters(null as any)).toThrow(TealTigerValidationError);
     });
 
     it('should reject undefined parameters', () => {
-      expect(() => validateToolParameters(undefined as any)).toThrow(AgentGuardValidationError);
+      expect(() => validateToolParameters(undefined as any)).toThrow(TealTigerValidationError);
     });
 
     it('should reject non-object parameters', () => {
@@ -209,7 +209,7 @@ describe('Validation Utilities', () => {
       ];
 
       invalidParameters.forEach(params => {
-        expect(() => validateToolParameters(params as any)).toThrow(AgentGuardValidationError);
+        expect(() => validateToolParameters(params as any)).toThrow(TealTigerValidationError);
       });
     });
 
@@ -219,7 +219,7 @@ describe('Validation Utilities', () => {
         invalidParam: () => console.log('function')
       };
 
-      expect(() => validateToolParameters(invalidParams)).toThrow(AgentGuardValidationError);
+      expect(() => validateToolParameters(invalidParams)).toThrow(TealTigerValidationError);
     });
 
     it('should reject parameters with symbol values', () => {
@@ -228,7 +228,7 @@ describe('Validation Utilities', () => {
         invalidParam: Symbol('symbol')
       };
 
-      expect(() => validateToolParameters(invalidParams)).toThrow(AgentGuardValidationError);
+      expect(() => validateToolParameters(invalidParams)).toThrow(TealTigerValidationError);
     });
   });
 
@@ -250,8 +250,8 @@ describe('Validation Utilities', () => {
     });
 
     it('should reject empty agent IDs', () => {
-      expect(() => validateAgentId('')).toThrow(AgentGuardValidationError);
-      expect(() => validateAgentId('   ')).toThrow(AgentGuardValidationError);
+      expect(() => validateAgentId('')).toThrow(TealTigerValidationError);
+      expect(() => validateAgentId('   ')).toThrow(TealTigerValidationError);
     });
 
     it('should reject agent IDs with invalid characters', () => {
@@ -281,13 +281,13 @@ describe('Validation Utilities', () => {
       ];
 
       invalidIds.forEach(id => {
-        expect(() => validateAgentId(id)).toThrow(AgentGuardValidationError);
+        expect(() => validateAgentId(id)).toThrow(TealTigerValidationError);
       });
     });
 
     it('should reject agent IDs that are too long', () => {
       const longId = 'a'.repeat(101); // Assuming max length is 100
-      expect(() => validateAgentId(longId)).toThrow(AgentGuardValidationError);
+      expect(() => validateAgentId(longId)).toThrow(TealTigerValidationError);
     });
   });
 
@@ -405,7 +405,7 @@ describe('Validation Utilities', () => {
 
   describe('sanitizeConfig', () => {
     it('should sanitize API key in configuration', () => {
-      const config: AgentGuardConfig = {
+      const config: TealTigerConfig = {
         apiKey: 'very-long-secret-api-key-12345',
         ssaUrl: 'https://test-ssa.example.com',
         agentId: 'test-agent',
@@ -423,7 +423,7 @@ describe('Validation Utilities', () => {
     });
 
     it('should handle short API keys', () => {
-      const config: AgentGuardConfig = {
+      const config: TealTigerConfig = {
         apiKey: 'short',
         ssaUrl: 'https://test-ssa.example.com'
       };
@@ -434,7 +434,7 @@ describe('Validation Utilities', () => {
     });
 
     it('should handle undefined optional fields', () => {
-      const config: AgentGuardConfig = {
+      const config: TealTigerConfig = {
         apiKey: 'test-api-key',
         ssaUrl: 'https://test-ssa.example.com'
       };
@@ -450,7 +450,7 @@ describe('Validation Utilities', () => {
     });
 
     it('should not modify original configuration', () => {
-      const config: AgentGuardConfig = {
+      const config: TealTigerConfig = {
         apiKey: 'secret-api-key',
         ssaUrl: 'https://test-ssa.example.com'
       };

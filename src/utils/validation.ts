@@ -1,64 +1,64 @@
 /**
- * Validation Utilities for AgentGuard SDK
+ * Validation Utilities for TealTiger SDK
  * 
  * This file contains validation functions for SDK inputs
  */
 
-import { AgentGuardConfig, ToolParameters } from '../types';
-import { AgentGuardConfigError, AgentGuardValidationError } from './errors';
-import { AgentGuardErrorCode } from '../types';
+import { TealTigerConfig, ToolParameters } from '../types';
+import { TealTigerConfigError, TealTigerValidationError } from './errors';
+import { TealTigerErrorCode } from '../types';
 
 /**
  * Validate SDK configuration
  */
-export function validateConfig(config: Partial<AgentGuardConfig>): void {
+export function validateConfig(config: Partial<TealTigerConfig>): void {
   // Validate API key
   if (!config.apiKey) {
-    throw new AgentGuardConfigError(
+    throw new TealTigerConfigError(
       'API key is required',
-      AgentGuardErrorCode.MISSING_API_KEY
+      TealTigerErrorCode.MISSING_API_KEY
     );
   }
 
   if (typeof config.apiKey !== 'string' || config.apiKey.length < 10) {
-    throw new AgentGuardConfigError(
+    throw new TealTigerConfigError(
       'API key must be at least 10 characters',
-      AgentGuardErrorCode.INVALID_API_KEY_FORMAT,
+      TealTigerErrorCode.INVALID_API_KEY_FORMAT,
       { apiKeyLength: config.apiKey?.length }
     );
   }
 
   // Validate SSA URL
   if (!config.ssaUrl) {
-    throw new AgentGuardConfigError(
+    throw new TealTigerConfigError(
       'SSA URL is required',
-      AgentGuardErrorCode.INVALID_SSA_URL
+      TealTigerErrorCode.INVALID_SSA_URL
     );
   }
 
   if (typeof config.ssaUrl !== 'string') {
-    throw new AgentGuardConfigError(
+    throw new TealTigerConfigError(
       'SSA URL must be a string',
-      AgentGuardErrorCode.INVALID_SSA_URL
+      TealTigerErrorCode.INVALID_SSA_URL
     );
   }
 
   try {
     const url = new URL(config.ssaUrl);
     if (url.protocol !== 'https:') {
-      throw new AgentGuardConfigError(
+      throw new TealTigerConfigError(
         'SSA URL must use HTTPS protocol',
-        AgentGuardErrorCode.INVALID_SSA_URL,
+        TealTigerErrorCode.INVALID_SSA_URL,
         { ssaUrl: config.ssaUrl, protocol: url.protocol }
       );
     }
   } catch (error) {
-    if (error instanceof AgentGuardConfigError) {
+    if (error instanceof TealTigerConfigError) {
       throw error;
     }
-    throw new AgentGuardConfigError(
+    throw new TealTigerConfigError(
       'SSA URL must be a valid URL',
-      AgentGuardErrorCode.INVALID_SSA_URL,
+      TealTigerErrorCode.INVALID_SSA_URL,
       { ssaUrl: config.ssaUrl }
     );
   }
@@ -66,9 +66,9 @@ export function validateConfig(config: Partial<AgentGuardConfig>): void {
   // Validate optional fields
   if (config.timeout !== undefined) {
     if (typeof config.timeout !== 'number' || config.timeout <= 0) {
-      throw new AgentGuardConfigError(
+      throw new TealTigerConfigError(
         'Timeout must be a positive number',
-        AgentGuardErrorCode.INVALID_CONFIG,
+        TealTigerErrorCode.INVALID_CONFIG,
         { timeout: config.timeout }
       );
     }
@@ -76,9 +76,9 @@ export function validateConfig(config: Partial<AgentGuardConfig>): void {
 
   if (config.retries !== undefined) {
     if (typeof config.retries !== 'number' || config.retries < 0) {
-      throw new AgentGuardConfigError(
+      throw new TealTigerConfigError(
         'Retries must be a non-negative number',
-        AgentGuardErrorCode.INVALID_CONFIG,
+        TealTigerErrorCode.INVALID_CONFIG,
         { retries: config.retries }
       );
     }
@@ -90,50 +90,50 @@ export function validateConfig(config: Partial<AgentGuardConfig>): void {
  */
 export function validateToolName(toolName: unknown): void {
   if (!toolName) {
-    throw new AgentGuardValidationError(
+    throw new TealTigerValidationError(
       'Tool name is required',
-      AgentGuardErrorCode.INVALID_REQUEST
+      TealTigerErrorCode.INVALID_REQUEST
     );
   }
 
   if (typeof toolName !== 'string') {
-    throw new AgentGuardValidationError(
+    throw new TealTigerValidationError(
       'Tool name must be a string',
-      AgentGuardErrorCode.INVALID_REQUEST,
+      TealTigerErrorCode.INVALID_REQUEST,
       { toolName, type: typeof toolName }
     );
   }
 
   if (toolName.trim().length === 0) {
-    throw new AgentGuardValidationError(
+    throw new TealTigerValidationError(
       'Tool name cannot be empty',
-      AgentGuardErrorCode.INVALID_REQUEST
+      TealTigerErrorCode.INVALID_REQUEST
     );
   }
 
   // Check for invalid characters (only allow alphanumeric, hyphens, and underscores)
   if (!/^[a-zA-Z][a-zA-Z0-9_-]*$/.test(toolName)) {
-    throw new AgentGuardValidationError(
+    throw new TealTigerValidationError(
       'Tool name can only contain letters, numbers, hyphens, and underscores, and must start with a letter',
-      AgentGuardErrorCode.INVALID_REQUEST,
+      TealTigerErrorCode.INVALID_REQUEST,
       { toolName }
     );
   }
 
   // Check for consecutive hyphens or underscores
   if (/--/.test(toolName) || /__/.test(toolName)) {
-    throw new AgentGuardValidationError(
+    throw new TealTigerValidationError(
       'Tool name cannot contain consecutive hyphens or underscores',
-      AgentGuardErrorCode.INVALID_REQUEST,
+      TealTigerErrorCode.INVALID_REQUEST,
       { toolName }
     );
   }
 
   // Check length limit
   if (toolName.length > 100) {
-    throw new AgentGuardValidationError(
+    throw new TealTigerValidationError(
       'Tool name cannot exceed 100 characters',
-      AgentGuardErrorCode.INVALID_REQUEST,
+      TealTigerErrorCode.INVALID_REQUEST,
       { toolName, length: toolName.length }
     );
   }
@@ -144,16 +144,16 @@ export function validateToolName(toolName: unknown): void {
  */
 export function validateToolParameters(parameters: unknown): void {
   if (parameters === null || parameters === undefined) {
-    throw new AgentGuardValidationError(
+    throw new TealTigerValidationError(
       'Tool parameters are required',
-      AgentGuardErrorCode.INVALID_REQUEST
+      TealTigerErrorCode.INVALID_REQUEST
     );
   }
 
   if (typeof parameters !== 'object' || Array.isArray(parameters)) {
-    throw new AgentGuardValidationError(
+    throw new TealTigerValidationError(
       'Tool parameters must be an object',
-      AgentGuardErrorCode.INVALID_REQUEST,
+      TealTigerErrorCode.INVALID_REQUEST,
       { parameters, type: typeof parameters }
     );
   }
@@ -161,17 +161,17 @@ export function validateToolParameters(parameters: unknown): void {
   // Check for invalid value types (functions, symbols)
   function checkValue(value: unknown, path: string): void {
     if (typeof value === 'function') {
-      throw new AgentGuardValidationError(
+      throw new TealTigerValidationError(
         `Tool parameters cannot contain functions at path: ${path}`,
-        AgentGuardErrorCode.INVALID_REQUEST,
+        TealTigerErrorCode.INVALID_REQUEST,
         { path, type: typeof value }
       );
     }
 
     if (typeof value === 'symbol') {
-      throw new AgentGuardValidationError(
+      throw new TealTigerValidationError(
         `Tool parameters cannot contain symbols at path: ${path}`,
-        AgentGuardErrorCode.INVALID_REQUEST,
+        TealTigerErrorCode.INVALID_REQUEST,
         { path, type: typeof value }
       );
     }
@@ -199,41 +199,41 @@ export function validateToolParameters(parameters: unknown): void {
  */
 export function validateAgentId(agentId: unknown): void {
   if (!agentId) {
-    throw new AgentGuardValidationError(
+    throw new TealTigerValidationError(
       'Agent ID is required',
-      AgentGuardErrorCode.INVALID_REQUEST
+      TealTigerErrorCode.INVALID_REQUEST
     );
   }
 
   if (typeof agentId !== 'string') {
-    throw new AgentGuardValidationError(
+    throw new TealTigerValidationError(
       'Agent ID must be a string',
-      AgentGuardErrorCode.INVALID_REQUEST,
+      TealTigerErrorCode.INVALID_REQUEST,
       { agentId, type: typeof agentId }
     );
   }
 
   if (agentId.trim().length === 0) {
-    throw new AgentGuardValidationError(
+    throw new TealTigerValidationError(
       'Agent ID cannot be empty',
-      AgentGuardErrorCode.INVALID_REQUEST
+      TealTigerErrorCode.INVALID_REQUEST
     );
   }
 
   // Check for invalid characters (only allow alphanumeric, hyphens, and underscores)
   if (!/^[a-zA-Z0-9_-]+$/.test(agentId)) {
-    throw new AgentGuardValidationError(
+    throw new TealTigerValidationError(
       'Agent ID can only contain letters, numbers, hyphens, and underscores',
-      AgentGuardErrorCode.INVALID_REQUEST,
+      TealTigerErrorCode.INVALID_REQUEST,
       { agentId }
     );
   }
 
   // Check length limit
   if (agentId.length > 100) {
-    throw new AgentGuardValidationError(
+    throw new TealTigerValidationError(
       'Agent ID cannot exceed 100 characters',
-      AgentGuardErrorCode.INVALID_REQUEST,
+      TealTigerErrorCode.INVALID_REQUEST,
       { agentId, length: agentId.length }
     );
   }
@@ -248,9 +248,9 @@ export function validateSecurityContext(context: unknown): void {
   }
 
   if (typeof context !== 'object' || Array.isArray(context)) {
-    throw new AgentGuardValidationError(
+    throw new TealTigerValidationError(
       'Security context must be an object',
-      AgentGuardErrorCode.INVALID_REQUEST,
+      TealTigerErrorCode.INVALID_REQUEST,
       { context, type: typeof context }
     );
   }
@@ -308,8 +308,8 @@ export function sanitizeParameters(parameters: ToolParameters): ToolParameters {
 /**
  * Validate and sanitize configuration for safe logging
  */
-export function sanitizeConfig(config: AgentGuardConfig): Partial<AgentGuardConfig> {
-  const sanitized: Partial<AgentGuardConfig> = {
+export function sanitizeConfig(config: TealTigerConfig): Partial<TealTigerConfig> {
+  const sanitized: Partial<TealTigerConfig> = {
     ssaUrl: config.ssaUrl
   };
 

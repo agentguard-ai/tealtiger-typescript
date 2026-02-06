@@ -1,12 +1,12 @@
 /**
- * AgentGuard SDK - Main Client Class
+ * TealTiger SDK - Main Client Class
  * 
  * This is the primary interface for developers to interact with the
  * AI Agent Security Platform
  */
 
 import {
-  AgentGuardConfig,
+  TealTigerConfig,
   ToolParameters,
   SecurityContext,
   ToolExecutionResult,
@@ -19,18 +19,18 @@ import {
 import { SSAClient } from './SSAClient';
 import { Configuration } from '../config/Configuration';
 import { validateToolName, validateToolParameters, sanitizeParameters } from '../utils/validation';
-import { AgentGuardValidationError } from '../utils/errors';
-import { AgentGuardErrorCode } from '../types';
+import { TealTigerValidationError } from '../utils/errors';
+import { TealTigerErrorCode } from '../types';
 
 /**
- * Main AgentGuard SDK client class
+ * Main TealTiger SDK client class
  */
-export class AgentGuard {
+export class TealTiger {
   private readonly config: Configuration;
   private readonly ssaClient: SSAClient;
   private readonly statistics: SDKStatistics;
 
-  constructor(config: Partial<AgentGuardConfig>) {
+  constructor(config: Partial<TealTigerConfig>) {
     this.config = new Configuration(config);
     this.ssaClient = new SSAClient(this.config.getConfig());
     
@@ -45,7 +45,7 @@ export class AgentGuard {
     };
 
     if (this.config.get('debug')) {
-      console.log('[AgentGuard SDK] Initialized with config:', this.config.getSafeConfig());
+      console.log('[TealTiger SDK] Initialized with config:', this.config.getSafeConfig());
     }
   }
 
@@ -75,17 +75,17 @@ export class AgentGuard {
       };
 
       if (this.config.get('debug')) {
-        console.log('[AgentGuard SDK] Evaluating tool:', toolName);
-        console.log('[AgentGuard SDK] Parameters:', sanitizeParameters(parameters));
+        console.log('[TealTiger SDK] Evaluating tool:', toolName);
+        console.log('[TealTiger SDK] Parameters:', sanitizeParameters(parameters));
       }
 
       // Evaluate security
       const evaluationResponse = await this.ssaClient.evaluateSecurity(request);
       
       if (!evaluationResponse.success) {
-        throw new AgentGuardValidationError(
+        throw new TealTigerValidationError(
           'Security evaluation failed',
-          AgentGuardErrorCode.VALIDATION_ERROR,
+          TealTigerErrorCode.VALIDATION_ERROR,
           { response: evaluationResponse }
         );
       }
@@ -105,9 +105,9 @@ export class AgentGuard {
           return await this.handleTransformDecision(decision, toolExecutor);
         
         default:
-          throw new AgentGuardValidationError(
+          throw new TealTigerValidationError(
             `Unknown security action: ${decision.action}`,
-            AgentGuardErrorCode.POLICY_ERROR,
+            TealTigerErrorCode.POLICY_ERROR,
             { decision }
           );
       }
@@ -116,7 +116,7 @@ export class AgentGuard {
       this.statistics.errorCount++;
       
       if (this.config.get('debug')) {
-        console.error('[AgentGuard SDK] Tool execution failed:', error);
+        console.error('[TealTiger SDK] Tool execution failed:', error);
       }
 
       // Return error result
@@ -161,9 +161,9 @@ export class AgentGuard {
     const response = await this.ssaClient.evaluateSecurity(request);
     
     if (!response.success) {
-      throw new AgentGuardValidationError(
+      throw new TealTigerValidationError(
         'Security evaluation failed',
-        AgentGuardErrorCode.VALIDATION_ERROR,
+        TealTigerErrorCode.VALIDATION_ERROR,
         { response }
       );
     }
@@ -222,7 +222,7 @@ export class AgentGuard {
   /**
    * Get current configuration (safe for logging)
    */
-  getConfig(): Partial<AgentGuardConfig> {
+  getConfig(): Partial<TealTigerConfig> {
     return this.config.getSafeConfig();
   }
 
@@ -236,7 +236,7 @@ export class AgentGuard {
     toolExecutor?: (toolName: string, params: ToolParameters) => Promise<T>
   ): Promise<ToolExecutionResult<T>> {
     if (this.config.get('debug')) {
-      console.log('[AgentGuard SDK] Tool allowed:', decision.reason);
+      console.log('[TealTiger SDK] Tool allowed:', decision.reason);
     }
 
     let data: T | undefined;
@@ -269,7 +269,7 @@ export class AgentGuard {
    */
   private handleDenyDecision<T>(decision: SecurityDecision): ToolExecutionResult<T> {
     if (this.config.get('debug')) {
-      console.log('[AgentGuard SDK] Tool denied:', decision.reason);
+      console.log('[TealTiger SDK] Tool denied:', decision.reason);
     }
 
     return {
@@ -291,7 +291,7 @@ export class AgentGuard {
     toolExecutor?: (toolName: string, params: ToolParameters) => Promise<T>
   ): Promise<ToolExecutionResult<T>> {
     if (this.config.get('debug')) {
-      console.log('[AgentGuard SDK] Tool transformed:', decision.reason);
+      console.log('[TealTiger SDK] Tool transformed:', decision.reason);
     }
 
     if (!decision.transformedRequest) {

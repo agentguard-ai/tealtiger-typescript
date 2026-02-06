@@ -11,8 +11,8 @@ import {
   PolicyTransformation,
   RiskLevel
 } from '../types';
-import { AgentGuardValidationError } from '../utils/errors';
-import { AgentGuardErrorCode } from '../types';
+import { TealTigerValidationError } from '../utils/errors';
+import { TealTigerErrorCode } from '../types';
 
 /**
  * Fluent policy builder class
@@ -27,9 +27,9 @@ export class PolicyBuilder {
    */
   name(name: string): PolicyBuilder {
     if (!name || typeof name !== 'string' || name.trim().length === 0) {
-      throw new AgentGuardValidationError(
+      throw new TealTigerValidationError(
         'Policy name must be a non-empty string',
-        AgentGuardErrorCode.VALIDATION_ERROR
+        TealTigerErrorCode.VALIDATION_ERROR
       );
     }
     this.policy.name = name.trim();
@@ -51,9 +51,9 @@ export class PolicyBuilder {
    */
   priority(priority: number): PolicyBuilder {
     if (typeof priority !== 'number' || priority < 0 || !Number.isFinite(priority)) {
-      throw new AgentGuardValidationError(
+      throw new TealTigerValidationError(
         'Policy priority must be a non-negative finite number',
-        AgentGuardErrorCode.VALIDATION_ERROR
+        TealTigerErrorCode.VALIDATION_ERROR
       );
     }
     this.policy.priority = priority;
@@ -214,37 +214,37 @@ export class PolicyBuilder {
    */
   private validatePolicy(): void {
     if (!this.policy.name) {
-      throw new AgentGuardValidationError(
+      throw new TealTigerValidationError(
         'Policy name is required',
-        AgentGuardErrorCode.VALIDATION_ERROR
+        TealTigerErrorCode.VALIDATION_ERROR
       );
     }
 
     if (!this.policy.action) {
-      throw new AgentGuardValidationError(
+      throw new TealTigerValidationError(
         'Policy action is required (allow, deny, or transform)',
-        AgentGuardErrorCode.VALIDATION_ERROR
+        TealTigerErrorCode.VALIDATION_ERROR
       );
     }
 
     if (!this.policy.reason) {
-      throw new AgentGuardValidationError(
+      throw new TealTigerValidationError(
         'Policy reason is required',
-        AgentGuardErrorCode.VALIDATION_ERROR
+        TealTigerErrorCode.VALIDATION_ERROR
       );
     }
 
     if (!this.policy.conditions || this.policy.conditions.length === 0) {
-      throw new AgentGuardValidationError(
+      throw new TealTigerValidationError(
         'Policy must have at least one condition',
-        AgentGuardErrorCode.VALIDATION_ERROR
+        TealTigerErrorCode.VALIDATION_ERROR
       );
     }
 
     if (this.policy.action === 'transform' && !this.policy.transformation) {
-      throw new AgentGuardValidationError(
+      throw new TealTigerValidationError(
         'Transform action requires a transformation definition',
-        AgentGuardErrorCode.VALIDATION_ERROR
+        TealTigerErrorCode.VALIDATION_ERROR
       );
     }
   }

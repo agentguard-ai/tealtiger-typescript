@@ -3,41 +3,41 @@
  */
 
 import {
-  BaseAgentGuardError,
-  AgentGuardConfigError,
-  AgentGuardNetworkError,
-  AgentGuardServerError,
-  AgentGuardSecurityError,
-  AgentGuardValidationError,
-  AgentGuardAuthError,
-  createAgentGuardError,
-  isAgentGuardError,
+  BaseTealTigerError,
+  TealTigerConfigError,
+  TealTigerNetworkError,
+  TealTigerServerError,
+  TealTigerSecurityError,
+  TealTigerValidationError,
+  TealTigerAuthError,
+  createTealTigerError,
+  isTealTigerError,
   getErrorDetails
 } from '../errors';
-import { AgentGuardErrorCode } from '../../types';
+import { TealTigerErrorCode } from '../../types';
 
 describe('Error Classes', () => {
-  describe('BaseAgentGuardError', () => {
+  describe('BaseTealTigerError', () => {
     it('should create error with required properties', () => {
-      const error = new BaseAgentGuardError(
+      const error = new BaseTealTigerError(
         'Test error message',
-        AgentGuardErrorCode.VALIDATION_ERROR
+        TealTigerErrorCode.VALIDATION_ERROR
       );
 
       expect(error).toBeInstanceOf(Error);
-      expect(error).toBeInstanceOf(BaseAgentGuardError);
+      expect(error).toBeInstanceOf(BaseTealTigerError);
       expect(error.message).toBe('Test error message');
-      expect(error.code).toBe(AgentGuardErrorCode.VALIDATION_ERROR);
-      expect(error.name).toBe('BaseAgentGuardError');
+      expect(error.code).toBe(TealTigerErrorCode.VALIDATION_ERROR);
+      expect(error.name).toBe('BaseTealTigerError');
     });
 
     it('should create error with optional details and cause', () => {
       const cause = new Error('Original error');
       const details = { requestId: '123', userId: 'user456' };
 
-      const error = new BaseAgentGuardError(
+      const error = new BaseTealTigerError(
         'Test error message',
-        AgentGuardErrorCode.NETWORK_ERROR,
+        TealTigerErrorCode.NETWORK_ERROR,
         details,
         cause
       );
@@ -47,22 +47,22 @@ describe('Error Classes', () => {
     });
 
     it('should have proper stack trace', () => {
-      const error = new BaseAgentGuardError(
+      const error = new BaseTealTigerError(
         'Test error',
-        AgentGuardErrorCode.VALIDATION_ERROR
+        TealTigerErrorCode.VALIDATION_ERROR
       );
 
       expect(error.stack).toBeDefined();
-      expect(error.stack).toContain('BaseAgentGuardError');
+      expect(error.stack).toContain('BaseTealTigerError');
     });
 
     it('should serialize to JSON correctly', () => {
       const cause = new Error('Original error');
       const details = { requestId: '123' };
 
-      const error = new BaseAgentGuardError(
+      const error = new BaseTealTigerError(
         'Test error message',
-        AgentGuardErrorCode.SERVER_ERROR,
+        TealTigerErrorCode.SERVER_ERROR,
         details,
         cause
       );
@@ -70,9 +70,9 @@ describe('Error Classes', () => {
       const json = error.toJSON();
 
       expect(json).toEqual({
-        name: 'BaseAgentGuardError',
+        name: 'BaseTealTigerError',
         message: 'Test error message',
-        code: AgentGuardErrorCode.SERVER_ERROR,
+        code: TealTigerErrorCode.SERVER_ERROR,
         details: { requestId: '123' },
         stack: error.stack,
         cause: 'Original error'
@@ -80,9 +80,9 @@ describe('Error Classes', () => {
     });
 
     it('should handle undefined details and cause', () => {
-      const error = new BaseAgentGuardError(
+      const error = new BaseTealTigerError(
         'Test error',
-        AgentGuardErrorCode.VALIDATION_ERROR
+        TealTigerErrorCode.VALIDATION_ERROR
       );
 
       expect(error.details).toBeUndefined();
@@ -95,82 +95,82 @@ describe('Error Classes', () => {
   });
 
   describe('Specific Error Classes', () => {
-    it('should create AgentGuardConfigError with default code', () => {
-      const error = new AgentGuardConfigError('Config error');
+    it('should create TealTigerConfigError with default code', () => {
+      const error = new TealTigerConfigError('Config error');
 
-      expect(error).toBeInstanceOf(BaseAgentGuardError);
-      expect(error).toBeInstanceOf(AgentGuardConfigError);
-      expect(error.code).toBe(AgentGuardErrorCode.INVALID_CONFIG);
+      expect(error).toBeInstanceOf(BaseTealTigerError);
+      expect(error).toBeInstanceOf(TealTigerConfigError);
+      expect(error.code).toBe(TealTigerErrorCode.INVALID_CONFIG);
       expect(error.message).toBe('Config error');
-      expect(error.name).toBe('AgentGuardConfigError');
+      expect(error.name).toBe('TealTigerConfigError');
     });
 
-    it('should create AgentGuardNetworkError with default code', () => {
-      const error = new AgentGuardNetworkError('Network error');
+    it('should create TealTigerNetworkError with default code', () => {
+      const error = new TealTigerNetworkError('Network error');
 
-      expect(error).toBeInstanceOf(BaseAgentGuardError);
-      expect(error).toBeInstanceOf(AgentGuardNetworkError);
-      expect(error.code).toBe(AgentGuardErrorCode.NETWORK_ERROR);
+      expect(error).toBeInstanceOf(BaseTealTigerError);
+      expect(error).toBeInstanceOf(TealTigerNetworkError);
+      expect(error.code).toBe(TealTigerErrorCode.NETWORK_ERROR);
       expect(error.message).toBe('Network error');
-      expect(error.name).toBe('AgentGuardNetworkError');
+      expect(error.name).toBe('TealTigerNetworkError');
     });
 
-    it('should create AgentGuardServerError with default code', () => {
-      const error = new AgentGuardServerError('Server error');
+    it('should create TealTigerServerError with default code', () => {
+      const error = new TealTigerServerError('Server error');
 
-      expect(error).toBeInstanceOf(BaseAgentGuardError);
-      expect(error).toBeInstanceOf(AgentGuardServerError);
-      expect(error.code).toBe(AgentGuardErrorCode.SERVER_ERROR);
+      expect(error).toBeInstanceOf(BaseTealTigerError);
+      expect(error).toBeInstanceOf(TealTigerServerError);
+      expect(error.code).toBe(TealTigerErrorCode.SERVER_ERROR);
       expect(error.message).toBe('Server error');
-      expect(error.name).toBe('AgentGuardServerError');
+      expect(error.name).toBe('TealTigerServerError');
     });
 
-    it('should create AgentGuardSecurityError with default code', () => {
-      const error = new AgentGuardSecurityError('Security error');
+    it('should create TealTigerSecurityError with default code', () => {
+      const error = new TealTigerSecurityError('Security error');
 
-      expect(error).toBeInstanceOf(BaseAgentGuardError);
-      expect(error).toBeInstanceOf(AgentGuardSecurityError);
-      expect(error.code).toBe(AgentGuardErrorCode.SECURITY_DENIED);
+      expect(error).toBeInstanceOf(BaseTealTigerError);
+      expect(error).toBeInstanceOf(TealTigerSecurityError);
+      expect(error.code).toBe(TealTigerErrorCode.SECURITY_DENIED);
       expect(error.message).toBe('Security error');
-      expect(error.name).toBe('AgentGuardSecurityError');
+      expect(error.name).toBe('TealTigerSecurityError');
     });
 
-    it('should create AgentGuardValidationError with default code', () => {
-      const error = new AgentGuardValidationError('Validation error');
+    it('should create TealTigerValidationError with default code', () => {
+      const error = new TealTigerValidationError('Validation error');
 
-      expect(error).toBeInstanceOf(BaseAgentGuardError);
-      expect(error).toBeInstanceOf(AgentGuardValidationError);
-      expect(error.code).toBe(AgentGuardErrorCode.VALIDATION_ERROR);
+      expect(error).toBeInstanceOf(BaseTealTigerError);
+      expect(error).toBeInstanceOf(TealTigerValidationError);
+      expect(error.code).toBe(TealTigerErrorCode.VALIDATION_ERROR);
       expect(error.message).toBe('Validation error');
-      expect(error.name).toBe('AgentGuardValidationError');
+      expect(error.name).toBe('TealTigerValidationError');
     });
 
-    it('should create AgentGuardAuthError with default code', () => {
-      const error = new AgentGuardAuthError('Auth error');
+    it('should create TealTigerAuthError with default code', () => {
+      const error = new TealTigerAuthError('Auth error');
 
-      expect(error).toBeInstanceOf(BaseAgentGuardError);
-      expect(error).toBeInstanceOf(AgentGuardAuthError);
-      expect(error.code).toBe(AgentGuardErrorCode.AUTHENTICATION_ERROR);
+      expect(error).toBeInstanceOf(BaseTealTigerError);
+      expect(error).toBeInstanceOf(TealTigerAuthError);
+      expect(error.code).toBe(TealTigerErrorCode.AUTHENTICATION_ERROR);
       expect(error.message).toBe('Auth error');
-      expect(error.name).toBe('AgentGuardAuthError');
+      expect(error.name).toBe('TealTigerAuthError');
     });
 
     it('should allow custom error codes', () => {
-      const error = new AgentGuardConfigError(
+      const error = new TealTigerConfigError(
         'Custom config error',
-        AgentGuardErrorCode.MISSING_API_KEY
+        TealTigerErrorCode.MISSING_API_KEY
       );
 
-      expect(error.code).toBe(AgentGuardErrorCode.MISSING_API_KEY);
+      expect(error.code).toBe(TealTigerErrorCode.MISSING_API_KEY);
     });
 
     it('should accept details and cause parameters', () => {
       const cause = new Error('Original error');
       const details = { field: 'apiKey' };
 
-      const error = new AgentGuardValidationError(
+      const error = new TealTigerValidationError(
         'Validation failed',
-        AgentGuardErrorCode.VALIDATION_ERROR,
+        TealTigerErrorCode.VALIDATION_ERROR,
         details,
         cause
       );
@@ -180,80 +180,80 @@ describe('Error Classes', () => {
     });
   });
 
-  describe('createAgentGuardError', () => {
+  describe('createTealTigerError', () => {
     it('should create appropriate error types based on error codes', () => {
       const testCases = [
         {
-          code: AgentGuardErrorCode.INVALID_CONFIG,
-          expectedType: AgentGuardConfigError
+          code: TealTigerErrorCode.INVALID_CONFIG,
+          expectedType: TealTigerConfigError
         },
         {
-          code: AgentGuardErrorCode.MISSING_API_KEY,
-          expectedType: AgentGuardConfigError
+          code: TealTigerErrorCode.MISSING_API_KEY,
+          expectedType: TealTigerConfigError
         },
         {
-          code: AgentGuardErrorCode.INVALID_SSA_URL,
-          expectedType: AgentGuardConfigError
+          code: TealTigerErrorCode.INVALID_SSA_URL,
+          expectedType: TealTigerConfigError
         },
         {
-          code: AgentGuardErrorCode.NETWORK_ERROR,
-          expectedType: AgentGuardNetworkError
+          code: TealTigerErrorCode.NETWORK_ERROR,
+          expectedType: TealTigerNetworkError
         },
         {
-          code: AgentGuardErrorCode.TIMEOUT_ERROR,
-          expectedType: AgentGuardNetworkError
+          code: TealTigerErrorCode.TIMEOUT_ERROR,
+          expectedType: TealTigerNetworkError
         },
         {
-          code: AgentGuardErrorCode.CONNECTION_ERROR,
-          expectedType: AgentGuardNetworkError
+          code: TealTigerErrorCode.CONNECTION_ERROR,
+          expectedType: TealTigerNetworkError
         },
         {
-          code: AgentGuardErrorCode.AUTHENTICATION_ERROR,
-          expectedType: AgentGuardAuthError
+          code: TealTigerErrorCode.AUTHENTICATION_ERROR,
+          expectedType: TealTigerAuthError
         },
         {
-          code: AgentGuardErrorCode.INVALID_API_KEY_FORMAT,
-          expectedType: AgentGuardAuthError
+          code: TealTigerErrorCode.INVALID_API_KEY_FORMAT,
+          expectedType: TealTigerAuthError
         },
         {
-          code: AgentGuardErrorCode.INVALID_REQUEST,
-          expectedType: AgentGuardValidationError
+          code: TealTigerErrorCode.INVALID_REQUEST,
+          expectedType: TealTigerValidationError
         },
         {
-          code: AgentGuardErrorCode.VALIDATION_ERROR,
-          expectedType: AgentGuardValidationError
+          code: TealTigerErrorCode.VALIDATION_ERROR,
+          expectedType: TealTigerValidationError
         },
         {
-          code: AgentGuardErrorCode.SERVER_ERROR,
-          expectedType: AgentGuardServerError
+          code: TealTigerErrorCode.SERVER_ERROR,
+          expectedType: TealTigerServerError
         },
         {
-          code: AgentGuardErrorCode.SERVICE_UNAVAILABLE,
-          expectedType: AgentGuardServerError
+          code: TealTigerErrorCode.SERVICE_UNAVAILABLE,
+          expectedType: TealTigerServerError
         },
         {
-          code: AgentGuardErrorCode.SECURITY_DENIED,
-          expectedType: AgentGuardSecurityError
+          code: TealTigerErrorCode.SECURITY_DENIED,
+          expectedType: TealTigerSecurityError
         },
         {
-          code: AgentGuardErrorCode.POLICY_ERROR,
-          expectedType: AgentGuardSecurityError
+          code: TealTigerErrorCode.POLICY_ERROR,
+          expectedType: TealTigerSecurityError
         }
       ];
 
       testCases.forEach(({ code, expectedType }) => {
-        const error = createAgentGuardError('Test message', code);
+        const error = createTealTigerError('Test message', code);
         expect(error).toBeInstanceOf(expectedType);
         expect(error.code).toBe(code);
         expect(error.message).toBe('Test message');
       });
     });
 
-    it('should create BaseAgentGuardError for unknown codes', () => {
-      const unknownCode = 'UNKNOWN_ERROR' as AgentGuardErrorCode;
-      const error = createAgentGuardError('Unknown error', unknownCode);
+    it('should create BaseTealTigerError for unknown codes', () => {
+      const unknownCode = 'UNKNOWN_ERROR' as TealTigerErrorCode;
+      const error = createTealTigerError('Unknown error', unknownCode);
 
-      expect(error).toBeInstanceOf(BaseAgentGuardError);
+      expect(error).toBeInstanceOf(BaseTealTigerError);
       expect(error.code).toBe(unknownCode);
     });
 
@@ -261,9 +261,9 @@ describe('Error Classes', () => {
       const cause = new Error('Original error');
       const details = { requestId: '123' };
 
-      const error = createAgentGuardError(
+      const error = createTealTigerError(
         'Test message',
-        AgentGuardErrorCode.NETWORK_ERROR,
+        TealTigerErrorCode.NETWORK_ERROR,
         details,
         cause
       );
@@ -273,25 +273,25 @@ describe('Error Classes', () => {
     });
   });
 
-  describe('isAgentGuardError', () => {
-    it('should return true for AgentGuard errors', () => {
+  describe('isTealTigerError', () => {
+    it('should return true for TealTiger errors', () => {
       const errors = [
-        new BaseAgentGuardError('Test', AgentGuardErrorCode.VALIDATION_ERROR),
-        new AgentGuardConfigError('Config error'),
-        new AgentGuardNetworkError('Network error'),
-        new AgentGuardServerError('Server error'),
-        new AgentGuardSecurityError('Security error'),
-        new AgentGuardValidationError('Validation error'),
-        new AgentGuardAuthError('Auth error')
+        new BaseTealTigerError('Test', TealTigerErrorCode.VALIDATION_ERROR),
+        new TealTigerConfigError('Config error'),
+        new TealTigerNetworkError('Network error'),
+        new TealTigerServerError('Server error'),
+        new TealTigerSecurityError('Security error'),
+        new TealTigerValidationError('Validation error'),
+        new TealTigerAuthError('Auth error')
       ];
 
       errors.forEach(error => {
-        expect(isAgentGuardError(error)).toBe(true);
+        expect(isTealTigerError(error)).toBe(true);
       });
     });
 
-    it('should return false for non-AgentGuard errors', () => {
-      const nonAgentGuardErrors = [
+    it('should return false for non-TealTiger errors', () => {
+      const nonTealTigerErrors = [
         new Error('Regular error'),
         new TypeError('Type error'),
         new ReferenceError('Reference error'),
@@ -303,17 +303,17 @@ describe('Error Classes', () => {
         []
       ];
 
-      nonAgentGuardErrors.forEach(error => {
-        expect(isAgentGuardError(error)).toBe(false);
+      nonTealTigerErrors.forEach(error => {
+        expect(isTealTigerError(error)).toBe(false);
       });
     });
   });
 
   describe('getErrorDetails', () => {
-    it('should extract details from AgentGuard errors', () => {
-      const error = new BaseAgentGuardError(
+    it('should extract details from TealTiger errors', () => {
+      const error = new BaseTealTigerError(
         'Test error',
-        AgentGuardErrorCode.VALIDATION_ERROR,
+        TealTigerErrorCode.VALIDATION_ERROR,
         { field: 'apiKey' },
         new Error('Cause')
       );
@@ -321,9 +321,9 @@ describe('Error Classes', () => {
       const details = getErrorDetails(error);
 
       expect(details).toEqual({
-        name: 'BaseAgentGuardError',
+        name: 'BaseTealTigerError',
         message: 'Test error',
-        code: AgentGuardErrorCode.VALIDATION_ERROR,
+        code: TealTigerErrorCode.VALIDATION_ERROR,
         details: { field: 'apiKey' },
         stack: error.stack,
         cause: 'Cause'
@@ -359,16 +359,16 @@ describe('Error Classes', () => {
       });
     });
 
-    it('should handle AgentGuard errors without toJSON method', () => {
+    it('should handle TealTiger errors without toJSON method', () => {
       // Create a regular error that will be handled by the Error branch
       const mockError = new Error('Mock error');
-      mockError.name = 'MockAgentGuardError';
+      mockError.name = 'MockTealTigerError';
       delete (mockError as any).stack;
 
       const details = getErrorDetails(mockError);
 
       expect(details).toEqual({
-        name: 'MockAgentGuardError',
+        name: 'MockTealTigerError',
         message: 'Mock error',
         stack: undefined
       });
@@ -377,23 +377,23 @@ describe('Error Classes', () => {
 
   describe('Error Inheritance', () => {
     it('should maintain proper inheritance chain', () => {
-      const error = new AgentGuardValidationError('Test error');
+      const error = new TealTigerValidationError('Test error');
 
       expect(error instanceof Error).toBe(true);
-      expect(error instanceof BaseAgentGuardError).toBe(true);
-      expect(error instanceof AgentGuardValidationError).toBe(true);
+      expect(error instanceof BaseTealTigerError).toBe(true);
+      expect(error instanceof TealTigerValidationError).toBe(true);
     });
 
     it('should be catchable as Error', () => {
       expect(() => {
-        throw new AgentGuardConfigError('Config error');
+        throw new TealTigerConfigError('Config error');
       }).toThrow(Error);
     });
 
-    it('should be catchable as BaseAgentGuardError', () => {
+    it('should be catchable as BaseTealTigerError', () => {
       expect(() => {
-        throw new AgentGuardNetworkError('Network error');
-      }).toThrow(BaseAgentGuardError);
+        throw new TealTigerNetworkError('Network error');
+      }).toThrow(BaseTealTigerError);
     });
   });
 });

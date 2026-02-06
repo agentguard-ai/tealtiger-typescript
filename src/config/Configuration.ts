@@ -1,16 +1,16 @@
 /**
- * Configuration Management for AgentGuard SDK
+ * Configuration Management for TealTiger SDK
  * 
  * This file handles SDK configuration with defaults and validation
  */
 
-import { AgentGuardConfig } from '../types';
+import { TealTigerConfig } from '../types';
 import { validateConfig } from '../utils/validation';
 
 /**
  * Default configuration values
  */
-export const DEFAULT_CONFIG: Partial<AgentGuardConfig> = {
+export const DEFAULT_CONFIG: Partial<TealTigerConfig> = {
   timeout: 5000,
   retries: 3,
   debug: false,
@@ -21,14 +21,14 @@ export const DEFAULT_CONFIG: Partial<AgentGuardConfig> = {
  * Configuration manager class
  */
 export class Configuration {
-  private config: AgentGuardConfig;
+  private config: TealTigerConfig;
 
-  constructor(userConfig: Partial<AgentGuardConfig>) {
+  constructor(userConfig: Partial<TealTigerConfig>) {
     // Merge user config with defaults
     this.config = {
       ...DEFAULT_CONFIG,
       ...userConfig
-    } as AgentGuardConfig;
+    } as TealTigerConfig;
 
     // Validate the final configuration
     validateConfig(this.config);
@@ -42,19 +42,19 @@ export class Configuration {
   /**
    * Get the complete configuration
    */
-  getConfig(): AgentGuardConfig {
+  getConfig(): TealTigerConfig {
     return { ...this.config };
   }
 
   /**
    * Get a specific configuration value
    */
-  get<K extends keyof AgentGuardConfig>(key: K): AgentGuardConfig[K] {
+  get<K extends keyof TealTigerConfig>(key: K): TealTigerConfig[K] {
     const value = this.config[key];
     
     // Deep clone objects to prevent external modification
     if (value && typeof value === 'object' && !Array.isArray(value)) {
-      return JSON.parse(JSON.stringify(value)) as AgentGuardConfig[K];
+      return JSON.parse(JSON.stringify(value)) as TealTigerConfig[K];
     }
     
     return value;
@@ -63,7 +63,7 @@ export class Configuration {
   /**
    * Update configuration (creates new instance)
    */
-  update(updates: Partial<AgentGuardConfig>): Configuration {
+  update(updates: Partial<TealTigerConfig>): Configuration {
     const newConfig = {
       ...this.config,
       ...updates
@@ -83,8 +83,8 @@ export class Configuration {
   /**
    * Get configuration for safe logging (without sensitive data)
    */
-  getSafeConfig(): Partial<AgentGuardConfig> {
-    const safeConfig: Partial<AgentGuardConfig> = {
+  getSafeConfig(): Partial<TealTigerConfig> {
+    const safeConfig: Partial<TealTigerConfig> = {
       ssaUrl: this.config.ssaUrl
     };
 

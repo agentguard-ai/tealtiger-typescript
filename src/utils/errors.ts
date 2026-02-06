@@ -1,23 +1,23 @@
 /**
- * Custom Error Classes for AgentGuard SDK
+ * Custom Error Classes for TealTiger SDK
  * 
  * This file defines custom error classes for different types of errors
- * that can occur when using the AgentGuard SDK
+ * that can occur when using the TealTiger SDK
  */
 
-import { AgentGuardError, AgentGuardErrorCode } from '../types';
+import { TealTigerError, TealTigerErrorCode } from '../types';
 
 /**
- * Base class for all AgentGuard SDK errors
+ * Base class for all TealTiger SDK errors
  */
-export class BaseAgentGuardError extends Error implements AgentGuardError {
-  public readonly code: AgentGuardErrorCode;
+export class BaseTealTigerError extends Error implements TealTigerError {
+  public readonly code: TealTigerErrorCode;
   public readonly details?: Record<string, unknown> | undefined;
   public readonly cause?: Error | undefined;
 
   constructor(
     message: string,
-    code: AgentGuardErrorCode,
+    code: TealTigerErrorCode,
     details?: Record<string, unknown>,
     cause?: Error
   ) {
@@ -58,10 +58,10 @@ export class BaseAgentGuardError extends Error implements AgentGuardError {
 /**
  * Configuration-related errors
  */
-export class AgentGuardConfigError extends BaseAgentGuardError {
+export class TealTigerConfigError extends BaseTealTigerError {
   constructor(
     message: string,
-    code: AgentGuardErrorCode = AgentGuardErrorCode.INVALID_CONFIG,
+    code: TealTigerErrorCode = TealTigerErrorCode.INVALID_CONFIG,
     details?: Record<string, unknown>,
     cause?: Error
   ) {
@@ -72,10 +72,10 @@ export class AgentGuardConfigError extends BaseAgentGuardError {
 /**
  * Network and communication errors
  */
-export class AgentGuardNetworkError extends BaseAgentGuardError {
+export class TealTigerNetworkError extends BaseTealTigerError {
   constructor(
     message: string,
-    code: AgentGuardErrorCode = AgentGuardErrorCode.NETWORK_ERROR,
+    code: TealTigerErrorCode = TealTigerErrorCode.NETWORK_ERROR,
     details?: Record<string, unknown>,
     cause?: Error
   ) {
@@ -86,10 +86,10 @@ export class AgentGuardNetworkError extends BaseAgentGuardError {
 /**
  * Server-side errors from the SSA
  */
-export class AgentGuardServerError extends BaseAgentGuardError {
+export class TealTigerServerError extends BaseTealTigerError {
   constructor(
     message: string,
-    code: AgentGuardErrorCode = AgentGuardErrorCode.SERVER_ERROR,
+    code: TealTigerErrorCode = TealTigerErrorCode.SERVER_ERROR,
     details?: Record<string, unknown>,
     cause?: Error
   ) {
@@ -100,10 +100,10 @@ export class AgentGuardServerError extends BaseAgentGuardError {
 /**
  * Security-related errors (denied requests, policy violations)
  */
-export class AgentGuardSecurityError extends BaseAgentGuardError {
+export class TealTigerSecurityError extends BaseTealTigerError {
   constructor(
     message: string,
-    code: AgentGuardErrorCode = AgentGuardErrorCode.SECURITY_DENIED,
+    code: TealTigerErrorCode = TealTigerErrorCode.SECURITY_DENIED,
     details?: Record<string, unknown>,
     cause?: Error
   ) {
@@ -114,10 +114,10 @@ export class AgentGuardSecurityError extends BaseAgentGuardError {
 /**
  * Request validation errors
  */
-export class AgentGuardValidationError extends BaseAgentGuardError {
+export class TealTigerValidationError extends BaseTealTigerError {
   constructor(
     message: string,
-    code: AgentGuardErrorCode = AgentGuardErrorCode.VALIDATION_ERROR,
+    code: TealTigerErrorCode = TealTigerErrorCode.VALIDATION_ERROR,
     details?: Record<string, unknown>,
     cause?: Error
   ) {
@@ -128,10 +128,10 @@ export class AgentGuardValidationError extends BaseAgentGuardError {
 /**
  * Authentication errors
  */
-export class AgentGuardAuthError extends BaseAgentGuardError {
+export class TealTigerAuthError extends BaseTealTigerError {
   constructor(
     message: string,
-    code: AgentGuardErrorCode = AgentGuardErrorCode.AUTHENTICATION_ERROR,
+    code: TealTigerErrorCode = TealTigerErrorCode.AUTHENTICATION_ERROR,
     details?: Record<string, unknown>,
     cause?: Error
   ) {
@@ -142,56 +142,56 @@ export class AgentGuardAuthError extends BaseAgentGuardError {
 /**
  * Utility function to create appropriate error based on error code
  */
-export function createAgentGuardError(
+export function createTealTigerError(
   message: string,
-  code: AgentGuardErrorCode,
+  code: TealTigerErrorCode,
   details?: Record<string, unknown>,
   cause?: Error
-): AgentGuardError {
+): TealTigerError {
   switch (code) {
-    case AgentGuardErrorCode.INVALID_CONFIG:
-    case AgentGuardErrorCode.MISSING_API_KEY:
-    case AgentGuardErrorCode.INVALID_SSA_URL:
-      return new AgentGuardConfigError(message, code, details, cause);
+    case TealTigerErrorCode.INVALID_CONFIG:
+    case TealTigerErrorCode.MISSING_API_KEY:
+    case TealTigerErrorCode.INVALID_SSA_URL:
+      return new TealTigerConfigError(message, code, details, cause);
 
-    case AgentGuardErrorCode.NETWORK_ERROR:
-    case AgentGuardErrorCode.TIMEOUT_ERROR:
-    case AgentGuardErrorCode.CONNECTION_ERROR:
-      return new AgentGuardNetworkError(message, code, details, cause);
+    case TealTigerErrorCode.NETWORK_ERROR:
+    case TealTigerErrorCode.TIMEOUT_ERROR:
+    case TealTigerErrorCode.CONNECTION_ERROR:
+      return new TealTigerNetworkError(message, code, details, cause);
 
-    case AgentGuardErrorCode.AUTHENTICATION_ERROR:
-    case AgentGuardErrorCode.INVALID_API_KEY_FORMAT:
-      return new AgentGuardAuthError(message, code, details, cause);
+    case TealTigerErrorCode.AUTHENTICATION_ERROR:
+    case TealTigerErrorCode.INVALID_API_KEY_FORMAT:
+      return new TealTigerAuthError(message, code, details, cause);
 
-    case AgentGuardErrorCode.INVALID_REQUEST:
-    case AgentGuardErrorCode.VALIDATION_ERROR:
-      return new AgentGuardValidationError(message, code, details, cause);
+    case TealTigerErrorCode.INVALID_REQUEST:
+    case TealTigerErrorCode.VALIDATION_ERROR:
+      return new TealTigerValidationError(message, code, details, cause);
 
-    case AgentGuardErrorCode.SERVER_ERROR:
-    case AgentGuardErrorCode.SERVICE_UNAVAILABLE:
-      return new AgentGuardServerError(message, code, details, cause);
+    case TealTigerErrorCode.SERVER_ERROR:
+    case TealTigerErrorCode.SERVICE_UNAVAILABLE:
+      return new TealTigerServerError(message, code, details, cause);
 
-    case AgentGuardErrorCode.SECURITY_DENIED:
-    case AgentGuardErrorCode.POLICY_ERROR:
-      return new AgentGuardSecurityError(message, code, details, cause);
+    case TealTigerErrorCode.SECURITY_DENIED:
+    case TealTigerErrorCode.POLICY_ERROR:
+      return new TealTigerSecurityError(message, code, details, cause);
 
     default:
-      return new BaseAgentGuardError(message, code, details, cause);
+      return new BaseTealTigerError(message, code, details, cause);
   }
 }
 
 /**
- * Type guard to check if an error is an AgentGuard error
+ * Type guard to check if an error is an TealTiger error
  */
-export function isAgentGuardError(error: unknown): error is AgentGuardError {
-  return error instanceof BaseAgentGuardError;
+export function isTealTigerError(error: unknown): error is TealTigerError {
+  return error instanceof BaseTealTigerError;
 }
 
 /**
  * Extract error details for logging
  */
 export function getErrorDetails(error: unknown): Record<string, unknown> {
-  if (isAgentGuardError(error) && error instanceof BaseAgentGuardError && typeof error.toJSON === 'function') {
+  if (isTealTigerError(error) && error instanceof BaseTealTigerError && typeof error.toJSON === 'function') {
     return error.toJSON();
   }
 

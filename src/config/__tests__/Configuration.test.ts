@@ -3,13 +3,13 @@
  */
 
 import { Configuration, DEFAULT_CONFIG } from '../Configuration';
-import { AgentGuardConfigError } from '../../utils/errors';
-import { AgentGuardConfig } from '../../types';
+import { TealTigerConfigError } from '../../utils/errors';
+import { TealTigerConfig } from '../../types';
 
 describe('Configuration', () => {
   describe('Constructor', () => {
     it('should create configuration with valid config', () => {
-      const config: AgentGuardConfig = {
+      const config: TealTigerConfig = {
         apiKey: 'test-api-key',
         ssaUrl: 'https://test-ssa.example.com',
         agentId: 'test-agent'
@@ -23,7 +23,7 @@ describe('Configuration', () => {
     });
 
     it('should merge with default configuration', () => {
-      const config: AgentGuardConfig = {
+      const config: TealTigerConfig = {
         apiKey: 'test-api-key',
         ssaUrl: 'https://test-ssa.example.com'
       };
@@ -36,7 +36,7 @@ describe('Configuration', () => {
     });
 
     it('should generate agent ID if not provided', () => {
-      const config: AgentGuardConfig = {
+      const config: TealTigerConfig = {
         apiKey: 'test-api-key',
         ssaUrl: 'https://test-ssa.example.com'
       };
@@ -54,7 +54,7 @@ describe('Configuration', () => {
           apiKey: '',
           ssaUrl: 'https://test-ssa.example.com'
         });
-      }).toThrow(AgentGuardConfigError);
+      }).toThrow(TealTigerConfigError);
     });
   });
 
